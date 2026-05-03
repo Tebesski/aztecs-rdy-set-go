@@ -5,10 +5,14 @@ An experimental module for signalling RP opportunities to the table without brea
 ## Default hotkeys
 
 - **Trigger Opportunity** — `Ctrl + Space`
+<img width="1897" height="511" alt="1" src="https://github.com/user-attachments/assets/3fd7ddcf-836a-4bd4-8c3b-e3fdb3926212" />
+
 - **Trigger with Countdown** — `Shift+Space
    - Hold `Shift + Space`, then **press** `1`–`9` (or `0` for 10s) → countdown opportunity fires immediately.
    - Hold `Shift + Space`, then **hold** a digit → fires with the cancel queued.
    - Release `Shift + Space` without pressing a digit → opens the countdown picker.
+ <img width="1895" height="772" alt="2" src="https://github.com/user-attachments/assets/90a651a2-3ea1-454c-98c7-fb5b30800d8f" />
+
 - **Snatch** — `Space`
 - **Stop opportunity** — `Escape`
 - **Cancel queue / Queue cancel** — `Space + Q` chord (GM, banner active)
