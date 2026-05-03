@@ -15,7 +15,7 @@ An experimental module for signalling RP opportunities to the table without brea
 
 - **Snatch** — `Space`
 - **Stop opportunity** — `Escape`
-- **Cancel queue / Queue cancel** — `Space + Q` chord (GM, banner active)
+- **Cancel queue / Queue cancel** — `Space + Q`
 - **Start Countdown on Current Opportunity** — `Shift + T`
 
 ## Scene control button
