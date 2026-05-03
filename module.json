@@ -1,0 +1,29 @@
+{
+   "id": "aztecs-rdy-set-go",
+   "title": "Aztec's RDY, SET, GO!",
+   "description": "Signal RP opportunities to your players without breaking immersion.",
+   "version": "#{VERSION}#",
+   "compatibility": {
+      "minimum": "13",
+      "verified": "14",
+      "maximum": "14"
+   },
+   "authors": [
+      {
+         "name": "Aztec"
+      }
+   ],
+   "esmodules": ["scripts/main.mjs"],
+   "styles": ["styles/module.css"],
+   "languages": [
+      {
+         "lang": "en",
+         "name": "English",
+         "path": "lang/en.json"
+      }
+   ],
+   "socket": true,
+   "url": "#{URL}#",
+   "manifest": "#{MANIFEST}#",
+   "download": "#{DOWNLOAD}#"
+}

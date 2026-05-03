@@ -1,0 +1,11 @@
+<div class="arsg-picker-card">
+  <button type="button" class="arsg-picker-close" aria-label="Close">×</button>
+  <div class="arsg-picker-title">{{title}}</div>
+  <div class="arsg-picker-hint">{{hint}}</div>
+  <div class="arsg-picker-digits">
+    {{#each digits}}
+      <button type="button" class="arsg-picker-digit" data-seconds="{{this.seconds}}">{{this.label}}</button>
+    {{/each}}
+  </div>
+  <div class="arsg-picker-foot">{{foot}}</div>
+</div>
