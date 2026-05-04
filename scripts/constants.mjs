@@ -25,9 +25,12 @@ export const SETTING = {
    CANCELLATION_QUEUED_TEXT: "cancellationQueuedText",
    SNATCH_BUTTON_TEXT: "snatchButtonText",
    DELEGATE_BUTTON_TEXT: "delegateButtonText",
+   RESUME_OPPORTUNITY_BUTTON_TEXT: "resumeOpportunityButtonText",
+   STOP_ACTING_BUTTON_TEXT: "stopActingButtonText",
    ALSO_TRIED_TEXT: "alsoTriedText",
    DELEGATE_DIALOG_TITLE: "delegateDialogTitle",
    DELEGATE_DIALOG_PROMPT: "delegateDialogPrompt",
+   STOPPED_ACTING_TEXT: "stoppedActingText",
 
    FRAME_COLOR: "frameColor",
 
@@ -51,8 +54,13 @@ export const SETTING = {
    DEFAULT_ACTOR_IMAGE: "defaultActorImage",
    NAME_DISPLAY_MODE: "nameDisplayMode",
    SHOW_SCENE_CONTROL: "showSceneControl",
+   ENABLE_SCREEN_GLOW: "enableScreenGlow",
    COUNTDOWN_DEFAULT_QUEUED: "countdownDefaultQueued",
    PAN_TO_TOKEN: "panToToken",
+   ENABLE_DELEGATE: "enableDelegate",
+   ACTS_AUTO_DISMISS: "actsAutoDismiss",
+   ACTS_AUTO_DISMISS_MS: "actsAutoDismissMs",
+   ANNOUNCE_STOPPED_ACTING: "announceStoppedActing",
 }
 
 export const KEYBIND = {
@@ -63,6 +71,8 @@ export const KEYBIND = {
    START_COUNTDOWN: "startCountdown",
    QUEUE_CANCEL: "queueCancel",
    STOP_OPPORTUNITY: "stopOpportunity",
+   RESUME_OPPORTUNITY: "resumeOpportunity",
+   STOP_ACTING: "stopActing",
 }
 
 export const SOCKET_TYPE = {
@@ -74,4 +84,6 @@ export const SOCKET_TYPE = {
    COUNTDOWN_START: "countdown-start",
    COUNTDOWN_TICK: "countdown-tick",
    QUEUE_TOGGLE: "queue-toggle",
+   RESUME_OPPORTUNITY: "resume-opportunity",
+   STOPPED_ACTING: "stopped-acting",
 }

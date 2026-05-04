@@ -1,6 +1,11 @@
-import { MODULE_ID, SETTING, SNATCH_RESOLVE_WINDOW_MS } from "./constants.mjs"
+import {
+   MODULE_ID,
+   SETTING,
+   SNATCH_RESOLVE_WINDOW_MS,
+   SOCKET_TYPE,
+} from "./constants.mjs"
 import { state, resetCountdownState, closeDelegateDialog } from "./state.mjs"
-import { emit, registerHandler, SOCKET_TYPE } from "./socket.mjs"
+import { emit, registerHandler } from "./socket.mjs"
 import { overlay } from "./overlay.mjs"
 import { playSetting } from "./sound.mjs"
 import { resolveDisplayName, resolveActorImage } from "./actor-image.mjs"
@@ -54,6 +59,50 @@ export function stopOpportunity() {
    emit({ type: SOCKET_TYPE.CANCEL, opportunityId: state.opportunityId })
 }
 
+export function resumeOpportunity() {
+   if (!state.active || !state.resolved) return
+   if (state.winnerId !== game.user.id) return
+   if (isGM()) {
+      broadcastOpportunity()
+   } else {
+      emit({
+         type: SOCKET_TYPE.RESUME_OPPORTUNITY,
+         opportunityId: state.opportunityId,
+         requesterId: game.user.id,
+      })
+   }
+}
+
+export function stopActing() {
+   if (!state.active || !state.resolved) return
+   if (state.winnerId !== game.user.id) return
+
+   const winner = game.users.get(game.user.id)
+   const displayName = resolveDisplayName(winner)
+   const image = game.settings.get(MODULE_ID, SETTING.SHOW_ACTOR_IMAGE)
+      ? resolveActorImage(winner)
+      : null
+   const shouldAnnounce = game.settings.get(
+      MODULE_ID,
+      SETTING.ANNOUNCE_STOPPED_ACTING,
+   )
+
+   let text = null
+   if (shouldAnnounce) {
+      const textTemplate =
+         game.settings.get(MODULE_ID, SETTING.STOPPED_ACTING_TEXT) ||
+         game.i18n.localize("ARSG.UI.StoppedActingDefault")
+      text = textTemplate.replace(/\{name\}/g, displayName)
+   }
+
+   emit({
+      type: SOCKET_TYPE.STOPPED_ACTING,
+      opportunityId: state.opportunityId,
+      text,
+      image,
+   })
+}
+
 export function delegateOpen() {
    if (!state.active || !state.resolved) return
    if (state.winnerId !== game.user.id) return
@@ -82,7 +131,7 @@ export function delegateOpen() {
 
    buttons.push({
       action: "cancel",
-      label: "Cancel",
+      label: game.i18n.localize("ARSG.UI.Cancel"),
       callback: () => {},
    })
 
@@ -190,7 +239,8 @@ async function onResolve(data) {
 
    const isWinner = data.winnerId === game.user.id
    const actsTextTemplate = isWinner
-      ? game.settings.get(MODULE_ID, SETTING.YOU_ACT_TEXT) || "You are acting!"
+      ? game.settings.get(MODULE_ID, SETTING.YOU_ACT_TEXT) ||
+        game.i18n.localize("ARSG.UI.YouActDefault")
       : game.settings.get(MODULE_ID, SETTING.ACTS_TEXT) ||
         game.i18n.localize("ARSG.UI.ActsDefault")
 
@@ -236,7 +286,8 @@ async function onDelegate(data) {
 
    const isWinner = data.toUserId === game.user.id
    const actsTextTemplate = isWinner
-      ? game.settings.get(MODULE_ID, SETTING.YOU_ACT_TEXT) || "You are acting!"
+      ? game.settings.get(MODULE_ID, SETTING.YOU_ACT_TEXT) ||
+        game.i18n.localize("ARSG.UI.YouActDefault")
       : game.settings.get(MODULE_ID, SETTING.ACTS_TEXT) ||
         game.i18n.localize("ARSG.UI.ActsDefault")
 
@@ -256,7 +307,7 @@ async function onDelegate(data) {
 }
 
 function onCancel(data) {
-   if (data.opportunityId !== state.opportunityId) return
+   if (state.opportunityId && data.opportunityId !== state.opportunityId) return
    closeDelegateDialog()
    state.resolved = true
    resetCountdownState()
@@ -274,10 +325,29 @@ function onCancel(data) {
    playSetting(SETTING.LOST_SOUND)
 }
 
+function onResumeOpportunity(data) {
+   if (!isGM()) return
+   if (state.opportunityId && data.opportunityId !== state.opportunityId) return
+   broadcastOpportunity()
+}
+
+function onStoppedActing(data) {
+   if (state.opportunityId && data.opportunityId !== state.opportunityId) return
+   closeDelegateDialog()
+   state.resolved = true
+   if (data.text) {
+      overlay.showStoppedActing({ text: data.text, image: data.image ?? null })
+   } else {
+      overlay.dismissSilent()
+   }
+}
+
 export function registerLifecycleHandlers() {
    registerHandler(SOCKET_TYPE.BROADCAST, onBroadcast)
    registerHandler(SOCKET_TYPE.SNATCH_ATTEMPT, onSnatchAttempt)
    registerHandler(SOCKET_TYPE.RESOLVE, onResolve)
    registerHandler(SOCKET_TYPE.DELEGATE, onDelegate)
    registerHandler(SOCKET_TYPE.CANCEL, onCancel)
+   registerHandler(SOCKET_TYPE.RESUME_OPPORTUNITY, onResumeOpportunity)
+   registerHandler(SOCKET_TYPE.STOPPED_ACTING, onStoppedActing)
 }

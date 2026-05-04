@@ -90,6 +90,21 @@ const TEXT_SETTINGS = [
       labelKey: "ARSG.Settings.DelegateButtonText",
    },
    {
+      key: SETTING.RESUME_OPPORTUNITY_BUTTON_TEXT,
+      defaultText: "Resume opportunity",
+      labelKey: "ARSG.Settings.ResumeOpportunityButtonText",
+   },
+   {
+      key: SETTING.STOP_ACTING_BUTTON_TEXT,
+      defaultText: "Stop acting",
+      labelKey: "ARSG.Settings.StopActingButtonText",
+   },
+   {
+      key: SETTING.STOPPED_ACTING_TEXT,
+      defaultText: "{name} stopped acting",
+      labelKey: "ARSG.Settings.StoppedActingText",
+   },
+   {
       key: SETTING.ALSO_TRIED_TEXT,
       defaultText: "Also tried:",
       labelKey: "ARSG.Settings.AlsoTriedText",
@@ -217,6 +232,16 @@ export function registerSettings() {
    })
    tag(SETTING.SHOW_SCENE_CONTROL, SECTION.VISUALS)
 
+   game.settings.register(MODULE_ID, SETTING.ENABLE_SCREEN_GLOW, {
+      name: "ARSG.Settings.EnableScreenGlow.Name",
+      hint: "ARSG.Settings.EnableScreenGlow.Hint",
+      scope: "world",
+      config: true,
+      type: Boolean,
+      default: true,
+   })
+   tag(SETTING.ENABLE_SCREEN_GLOW, SECTION.VISUALS)
+
    for (const group of SOUND_GROUPS) {
       const defaultPath = group.defaultFile
          ? `modules/${MODULE_ID}/assets/sfx/${group.defaultFile}`
@@ -260,6 +285,47 @@ export function registerSettings() {
       default: false,
    })
    tag(SETTING.PAN_TO_TOKEN, SECTION.BEHAVIOR)
+
+   game.settings.register(MODULE_ID, SETTING.ENABLE_DELEGATE, {
+      name: "ARSG.Settings.EnableDelegate.Name",
+      hint: "ARSG.Settings.EnableDelegate.Hint",
+      scope: "world",
+      config: true,
+      type: Boolean,
+      default: true,
+   })
+   tag(SETTING.ENABLE_DELEGATE, SECTION.BEHAVIOR)
+
+   game.settings.register(MODULE_ID, SETTING.ACTS_AUTO_DISMISS, {
+      name: "ARSG.Settings.ActsAutoDismiss.Name",
+      hint: "ARSG.Settings.ActsAutoDismiss.Hint",
+      scope: "world",
+      config: true,
+      type: Boolean,
+      default: false,
+   })
+   tag(SETTING.ACTS_AUTO_DISMISS, SECTION.BEHAVIOR)
+
+   game.settings.register(MODULE_ID, SETTING.ACTS_AUTO_DISMISS_MS, {
+      name: "ARSG.Settings.ActsAutoDismissMs.Name",
+      hint: "ARSG.Settings.ActsAutoDismissMs.Hint",
+      scope: "world",
+      config: true,
+      type: Number,
+      default: 5000,
+      range: { min: 500, max: 30000, step: 500 },
+   })
+   tag(SETTING.ACTS_AUTO_DISMISS_MS, SECTION.BEHAVIOR)
+
+   game.settings.register(MODULE_ID, SETTING.ANNOUNCE_STOPPED_ACTING, {
+      name: "ARSG.Settings.AnnounceStoppedActing.Name",
+      hint: "ARSG.Settings.AnnounceStoppedActing.Hint",
+      scope: "world",
+      config: true,
+      type: Boolean,
+      default: true,
+   })
+   tag(SETTING.ANNOUNCE_STOPPED_ACTING, SECTION.BEHAVIOR)
 }
 
 export function injectSettingsUI(html) {

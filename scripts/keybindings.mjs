@@ -5,6 +5,8 @@ import {
    snatch,
    stopOpportunity,
    delegateOpen,
+   resumeOpportunity,
+   stopActing,
    isGM,
 } from "./lifecycle.mjs"
 import { startCountdown, toggleQueuedCancel } from "./countdown.mjs"
@@ -42,13 +44,27 @@ export function registerKeybindings() {
    game.keybindings.register(MODULE_ID, KEYBIND.DELEGATE, {
       name: "ARSG.Keybind.Delegate",
       hint: "ARSG.Keybind.DelegateHint",
-      editable: [{ key: "Space", modifiers: [] }],
+      editable: [{ key: "KeyD", modifiers: ["Shift"] }],
       onDown: passthrough,
       onUp: passthrough,
    })
    game.keybindings.register(MODULE_ID, KEYBIND.STOP_OPPORTUNITY, {
       name: "ARSG.Keybind.StopOpportunity",
       hint: "ARSG.Keybind.StopOpportunityHint",
+      editable: [{ key: "Escape", modifiers: [] }],
+      onDown: passthrough,
+      onUp: passthrough,
+   })
+   game.keybindings.register(MODULE_ID, KEYBIND.RESUME_OPPORTUNITY, {
+      name: "ARSG.Keybind.ResumeOpportunity",
+      hint: "ARSG.Keybind.ResumeOpportunityHint",
+      editable: [{ key: "Space", modifiers: [] }],
+      onDown: passthrough,
+      onUp: passthrough,
+   })
+   game.keybindings.register(MODULE_ID, KEYBIND.STOP_ACTING, {
+      name: "ARSG.Keybind.StopActing",
+      hint: "ARSG.Keybind.StopActingHint",
       editable: [{ key: "Escape", modifiers: [] }],
       onDown: passthrough,
       onUp: passthrough,
@@ -141,11 +157,45 @@ function onWindowKeyDown(ev) {
    const triggerBind = getBinding(KEYBIND.TRIGGER)
    const countdownBind = getBinding(KEYBIND.TRIGGER_COUNTDOWN)
    const snatchBind = getBinding(KEYBIND.SNATCH)
-   const delegateBind = getBinding(KEYBIND.DELEGATE)
    const stopBind = getBinding(KEYBIND.STOP_OPPORTUNITY)
+   const resumeOpportunityBind = getBinding(KEYBIND.RESUME_OPPORTUNITY)
+   const stopActingBind = getBinding(KEYBIND.STOP_ACTING)
+   const delegateBind = getBinding(KEYBIND.DELEGATE)
 
    if (ev.code === "Space" && !ev.repeat) {
       state.physicalSpaceDown = true
+   }
+
+   if (eventMatches(ev, stopActingBind) && userIsWinnerInActsState()) {
+      ev.preventDefault()
+      ev.stopImmediatePropagation()
+      if (!ev.repeat) stopActing()
+      return
+   }
+
+   if (
+      eventMatches(ev, delegateBind) &&
+      userIsWinnerInActsState() &&
+      !state.triggerHeld &&
+      !state.triggerWithCountdownHeld &&
+      !state.delegateDialog
+   ) {
+      ev.preventDefault()
+      ev.stopImmediatePropagation()
+      if (!ev.repeat) delegateOpen()
+      return
+   }
+
+   if (
+      eventMatches(ev, resumeOpportunityBind) &&
+      userIsWinnerInActsState() &&
+      !state.triggerHeld &&
+      !state.triggerWithCountdownHeld
+   ) {
+      ev.preventDefault()
+      ev.stopImmediatePropagation()
+      if (!ev.repeat) resumeOpportunity()
+      return
    }
 
    if (
@@ -182,25 +232,8 @@ function onWindowKeyDown(ev) {
       return
    }
 
-   if (eventMatches(ev, delegateBind)) {
-      if (userIsWinnerInActsState()) {
-         ev.preventDefault()
-         ev.stopImmediatePropagation()
-         if (ev.repeat) return
-         delegateOpen()
-         return
-      }
-   }
-
    if (eventMatches(ev, snatchBind)) {
       if (state.triggerHeld || state.triggerWithCountdownHeld) return
-      if (userIsWinnerInActsState()) {
-         ev.preventDefault()
-         ev.stopImmediatePropagation()
-         if (ev.repeat) return
-         delegateOpen()
-         return
-      }
       if (!state.active || state.resolved) return
       ev.preventDefault()
       ev.stopImmediatePropagation()

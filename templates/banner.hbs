@@ -5,17 +5,22 @@
       <div class="arsg-text"></div>
       <div class="arsg-acts-break"></div>
       <button type="button" class="arsg-snatch-btn">{{snatchLabel}}</button>
-      <button
-         type="button"
-         class="arsg-delegate-btn"
-         hidden
-      >{{delegateLabel}}</button>
+      <button type="button" class="arsg-resume-btn" hidden>{{resumeLabel}}</button>
       <div class="arsg-or">{{orLabel}}</div>
       <div class="arsg-keys"></div>
       <div class="arsg-countdown-slot">
          <div class="arsg-countdown" hidden></div>
       </div>
       <div class="arsg-cancel-tag" hidden>{{queuedLabel}}</div>
+   </div>
+   <div class="arsg-acts-actions" hidden>
+      <button type="button" class="arsg-delegate-btn" hidden>{{delegateLabel}}</button>
+      <div class="arsg-delegate-or arsg-or" hidden>{{orLabel}}</div>
+      <div class="arsg-delegate-keys arsg-keys" hidden></div>
+      <div class="arsg-acts-actions-sep" hidden>·</div>
+      <button type="button" class="arsg-stop-acting-btn" hidden>{{stopActingLabel}}</button>
+      <div class="arsg-stop-or arsg-or" hidden>{{orLabel}}</div>
+      <div class="arsg-stop-keys arsg-keys" hidden></div>
    </div>
    <div class="arsg-gm-actions" hidden></div>
    <div class="arsg-gm-tips" hidden></div>
